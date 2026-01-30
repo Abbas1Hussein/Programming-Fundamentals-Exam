@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جامعة كربلاء - أساسيات البرمجة (L1-L4)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f3f4f6;
+        }
+        
+        .ltr-content {
+            direction: ltr;
+            font-family: 'Inter', sans-serif;
+            text-align: left;
+        }
+
+        .ltr-inline {
+            direction: ltr;
+            display: inline-block;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            color: #2563eb; 
+        }
+
+        .code-block {
+            font-family: 'Consolas', 'Monaco', monospace;
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+            direction: ltr;
+            text-align: left;
+            line-height: 1.6;
+            border-left: 4px solid #3b82f6;
+            white-space: pre;
+            font-size: 0.9rem;
+        }
+
+        .option-text {
+            font-family: 'Consolas', 'Monaco', monospace;
+            white-space: pre;
+            display: block;
+            line-height: 1.5;
+            text-align: left;
+            direction: ltr;
+        }
+
+        .note-content {
+            text-align: right;
+            direction: rtl;
+            color: #374151;
+            line-height: 1.8;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .correct-anim {
+            animation: pulse-green 0.5s;
+        }
+
+        .wrong-anim {
+            animation: shake 0.4s;
+        }
+
+        @keyframes pulse-green {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="text-gray-800 h-screen flex flex-col md:flex-row overflow-hidden">
+
+    <!-- القائمة الجانبية -->
+    <aside class="w-full md:w-72 bg-white shadow-md flex-shrink-0 flex flex-col h-full z-10 hidden md:flex">
+        <div class="p-6 border-b border-gray-100 bg-blue-900 text-white text-center">
+            <h1 class="text-xl font-bold">أساسيات البرمجة</h1>
+            <p class="text-xs text-blue-200 mt-1">جامعة كربلاء - كلية علوم الحاسوب</p>
+            <p class="text-xs text-blue-300 mt-1">المحاضرات 1 - 4</p>
+        </div>
+        
+        <nav class="flex-1 overflow-y-auto p-4 space-y-2">
+            <button onclick="app.loadView('dashboard')" class="w-full text-right px-4 py-3 rounded-lg hover:bg-blue-50 transition-colors flex items-center gap-3 font-medium text-gray-700 focus:outline-none" id="nav-dashboard">
+                <i class="fas fa-home text-blue-500 ml-2"></i> لوحة التحكم
+            </button>
+            
+            <div class="pt-4 pb-2 text-xs font-semibold text-gray-400 uppercase tracking-wider px-2">المادة النظرية</div>
+
+            <button onclick="app.loadView('lecture_notes')" class="w-full text-right px-4 py-3 rounded-lg hover:bg-teal-50 transition-colors flex items-center gap-3 text-gray-700 nav-btn" id="nav-lecture_notes">
+                <i class="fas fa-book-open text-teal-500 ml-2"></i>
+                <div>
+                    <span class="block text-sm font-semibold">شرح المحاضرات</span>
+                    <span class="block text-xs text-gray-500">ملخص شامل (L1-L4)</span>
+                </div>
+            </button>
+
+            <button onclick="app.loadView('algo')" class="w-full text-right px-4 py-3 rounded-lg hover:bg-teal-50 transition-colors flex items-center gap-3 text-gray-700 nav-btn" id="nav-algo">
+                <i class="fas fa-sitemap text-teal-600 ml-2"></i>
+                <div>
+                    <span class="block text-sm font-semibold">الخوارزميات (Lecture 1)</span>
+                    <span class="block text-xs text-gray-500">أسئلة المخططات الانسيابية</span>
+                </div>
+            </button>
+
+            <div class="pt-4 pb-2 text-xs font-semibold text-gray-400 uppercase tracking-wider px-2">أسئلة العملي (هام)</div>
+
+            <button onclick="app.loadView('practical')" class="w-full text-right px-4 py-3 rounded-lg hover:bg-indigo-50 transition-colors flex items-center gap-3 text-gray-700 nav-btn" id="nav-practical">
+                <i class="fas fa-laptop-code text-indigo-600 ml-2"></i>
+                <div>
+                    <span class="block text-sm font-semibold">تمارين المحاضرات</span>
+                    <span class="block text-xs text-gray-500">تطبيقات عملية (3.1 & 3.2)</span>
+                </div>
+            </button>
+
+            <div class="pt-4 pb-2 text-xs font-semibold text-gray-400 uppercase tracking-wider px-2">الاختبارات</div>
+            
+            <button onclick="app.loadView('l1')" class="w-full text-right px-4 py-3 rounded-lg hover:bg-blue-50 transition-colors flex items-center gap-3 text-gray-700 nav-btn" id="nav-l1">
+                <i class="fas fa-code text-indigo-500 ml-2"></i> 
+                <div>
+                    <span class="block text-sm font-semibold">المحاضرة 1 و 2</span>
+                    <span class="block text-xs text-gray-500">الأساسيات والعمليات</span>
+                </div>
+            </button>
+
+            <button onclick="app.loadView('l3')" class="w-full text-right px-4 py-3 rounded-lg hover:bg-blue-50 transition-colors flex items-center gap-3 text-gray-700 nav-btn" id="nav-l3">
+                <i class="fas fa-code-branch text-purple-500 ml-2"></i>
+                <div>
+                    <span class="block text-sm font-semibold">المحاضرة 3</span>
+                    <span class="block text-xs text-gray-500">الجمل الشرطية (If/Else)</span>
+                </div>
+            </button>
+
+            <button onclick="app.loadView('l4')" class="w-full text-right px-4 py-3 rounded-lg hover:bg-blue-50 transition-colors flex items-center gap-3 text-gray-700 nav-btn" id="nav-l4">
+                <i class="fas fa-sync-alt text-green-500 ml-2"></i>
+                <div>
+                    <span class="block text-sm font-semibold">المحاضرة 4</span>
+                    <span class="block text-xs text-gray-500">حلقات التكرار (Loops)</span>
+                </div>
+            </button>
+
+            <div class="pt-4 pb-2 text-xs font-semibold text-gray-400 uppercase tracking-wider px-2">مراجعة شاملة</div>
+
+            <button onclick="app.loadView('worksheet')" class="w-full text-right px-4 py-3 rounded-lg hover:bg-amber-50 transition-colors flex items-center gap-3 text-gray-700 nav-btn" id="nav-worksheet">
+                <i class="fas fa-file-alt text-amber-500 ml-2"></i>
+                <div>
+                    <span class="block text-sm font-semibold">أوراق العمل (Worksheets)</span>
+                    <span class="block text-xs text-gray-500">تمارين عملية متقدمة</span>
+                </div>
+            </button>
+
+            <button onclick="app.loadView('archive')" class="w-full text-right px-4 py-3 rounded-lg hover:bg-red-50 transition-colors flex items-center gap-3 text-gray-700 nav-btn" id="nav-archive">
+                <i class="fas fa-archive text-red-500 ml-2"></i>
+                <div>
+                    <span class="block text-sm font-semibold">أرشيف الامتحانات</span>
+                    <span class="block text-xs text-gray-500">أسئلة سنوات سابقة</span>
+                </div>
+            </button>
+        </nav>
+
+        <div class="p-4 border-t border-gray-100 bg-gray-50">
+            <div class="mt-3 pt-2 border-t border-gray-200 text-center">
+                <span class="text-[10px] text-gray-400 ltr-content block text-center" dir="ltr">Dev: <span class="font-bold text-gray-500">AbbasHussein</span></span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="flex-1 flex flex-col h-full overflow-hidden bg-gray-50 relative">
+        <header class="md:hidden bg-white p-4 shadow-sm flex justify-between items-center">
+            <span class="font-bold text-gray-800">أساسيات البرمجة</span>
+            <button class="text-gray-600 focus:outline-none" onclick="document.querySelector('aside').classList.toggle('hidden'); document.querySelector('aside').classList.toggle('absolute'); document.querySelector('aside').classList.toggle('inset-0'); document.querySelector('aside').classList.toggle('z-50');">
+                <i class="fas fa-bars"></i>
+            </button>
+        </header>
+
+        <div id="app-content" class="flex-1 overflow-y-auto p-4 md:p-8 pb-20">
+            <!-- المحتوى الديناميكي -->
+        </div>
+    </main>
+
+    <!-- التطبيق JS -->
+    <script>
+        // --- قاعدة بيانات المحاضرات ---
+        const lectureContent = {
+            notes: [
+                {
+                    title: "المحاضرة 1: مقدمة وتصميم البرامج (Lecture 1)",
+                    source: "Lecture1.pdf",
+                    content: `
+                        <h4 class="font-bold text-blue-800 mb-2 mt-2">1. الخوارزميات (Algorithms):</h4>
+                        <p class="text-sm mb-2">
+                            الخوارزمية هي مجموعة من الخطوات المتسلسلة لحل مشكلة معينة. أهم خصائصها:
+                        </p>
+                        <ul class="list-disc list-inside text-sm mb-2 space-y-1">
+                            <li><span class="ltr-inline">Finiteness</span>: المحدودية (يجب أن تنتهي الخطوات).</li>
+                            <li><span class="ltr-inline">Non-ambiguity</span>: عدم الغموض (خطوات واضحة).</li>
+                        </ul>
+
+                        <h4 class="font-bold text-blue-800 mb-2 mt-4">2. رموز المخطط الانسيابي (Flowchart Symbols):</h4>
+                        <ul class="list-disc list-inside text-sm mb-4 space-y-1">
+                            <li><strong>الشكل البيضوي (Oval):</strong> للبداية والنهاية <span class="ltr-inline">(Start / End)</span>.</li>
+                            <li><strong>متوازي الأضلاع (Parallelogram):</strong> للإدخال والإخراج <span class="ltr-inline">(Input / Output)</span>.</li>
+                            <li><strong>المستطيل (Rectangle):</strong> للمعالجة والعمليات الحسابية <span class="ltr-inline">(Process)</span>.</li>
+                            <li><strong>المعين (Diamond):</strong> لاتخاذ القرار والشرط <span class="ltr-inline">(Decision: Yes/No)</span>.</li>
+                        </ul>
+                    `
+                },
+                {
+                    title: "المحاضرة 2: أساسيات ++C",
+                    source: "Prog 1.pdf & Exam Qs",
+                    content: `
+                        <h4 class="font-bold text-teal-800 mb-2 mt-2">قواعد تسمية المتغيرات:</h4>
+                        <ul class="list-disc list-inside text-sm mb-4 space-y-1">
+                            <li>يمنع بدء الاسم برقم (مثلاً <span class="ltr-inline text-red-600">5x</span> خطأ).</li>
+                            <li>يمنع استخدام الكلمات المحجوزة <span class="ltr-inline">(Keywords)</span> مثل <span class="ltr-inline">if, while</span>.</li>
+                        </ul>
+
+                        <h4 class="font-bold text-teal-800 mb-2 mt-4">أسبقية العمليات (Precedence):</h4>
+                        <ol class="list-decimal list-inside text-sm mb-2">
+                            <li>الأقواس <span class="ltr-inline">()</span></li>
+                            <li>الضرب والقسمة وباقي القسمة <span class="ltr-inline">(*, /, %)</span></li>
+                            <li>الجمع والطرح <span class="ltr-inline">(+, -)</span></li>
+                        </ol>
+                    `
+                },
+                {
+                    title: "المحاضرة 3: تطبيقات الجمل الشرطية (هام جداً)",
+                    source: "برمجة عملي محاضرة 3.1 & 3.2",
+                    content: `
+                        <p class="mb-3 text-sm">أمثلة عملية يجب حفظ طريقة كتابتها كما وردت في المحاضرات:</p>
+                        
+                        <h4 class="font-bold text-purple-700 text-sm">1. فحص العدد (زوجي/فردي) بدون Else:</h4>
+                        <p class="text-sm mb-1">في المحاضرة 3.1، تم الحل باستخدام جملتي if منفصلتين:</p>
+                        <div class="code-block text-sm">
+if (x % 2 == 0)
+    cout << "Even";
+if (x % 2 != 0)
+    cout << "Odd";
+                        </div>
+
+                        <h4 class="font-bold text-purple-700 text-sm mt-4">2. تعديل درجات الطالب (Grade Adjustment):</h4>
+                        <p class="text-sm mb-1">زيادة 5 للناجح و 10 للراسب. لاحظ استخدام الأقواس { } لأن الشرط يحتوي أكثر من جملة:</p>
+                        <div class="code-block text-sm">
+if (av >= 50) {
+    av = av + 5;
+    cout << av;
+}
+if (av < 50) {
+    av = av + 10;
+    cout << av;
+}
+                        </div>
+
+                        <h4 class="font-bold text-purple-700 text-sm mt-4">3. سلم الرواتب (Salary Ladder - Lec 3.2):</h4>
+                        <div class="code-block text-sm">
+if (years >= 1 && years <= 5)
+    sal = sal + 100;
+else if (years >= 6 && years <= 10)
+    sal = sal + 200;
+else
+    sal = sal + 300;
+                        </div>
+                    `
+                },
+                {
+                    title: "المحاضرة 4: الحلقات المتقدمة",
+                    source: "Lecture 4 & Exams",
+                    content: `
+                        <h4 class="font-bold text-red-700 text-sm">أخطاء شائعة (Common Errors):</h4>
+                        <div class="code-block text-sm">
+// الفاصلة المنقوطة القاتلة ; تنهي عمل الدورة فوراً
+for (n = 1; n <= 2; n++); 
+    cout << n; 
+// الناتج: 3 (يطبع القيمة النهائية فقط)
+                        </div>
+
+                        <h4 class="font-bold text-red-700 text-sm mt-4">تفكيك العدد (Armstrong):</h4>
+                        <p class="text-sm mb-1">لفصل المراتب نستخدم:</p>
+                        <div class="code-block text-sm">
+while (num > 0) {
+    digit = num % 10;  // خذ الآحاد
+    num = num / 10;    // احذف الآحاد
+}
+                        </div>
+                    `
+                }
+            ]
+        };
+
+        // --- قاعدة بيانات الأسئلة ---
+        const database = {
+            algo: {
+                title: "الخوارزميات (Lecture 1)",
+                description: "أسئلة حول المخططات الانسيابية والخوارزميات (Lecture 1 PDF).",
+                questions: [
+                    {
+                        id: "alg_q1",
+                        type: "mcq",
+                        question: "In Flowcharts, which symbol is used for 'Input' and 'Output' operations?",
+                        code: null,
+                        options: ["Rectangle (المستطيل)", "Diamond (المعين)", "Parallelogram (متوازي الأضلاع)", "Oval (البيضوي)"],
+                        answer: 2,
+                        hint: "(Lecture 1, Page 4) راجع جدول الرموز.",
+                        explanation: "يستخدم متوازي الأضلاع (Parallelogram) لعمليات الإدخال والإخراج. المستطيل للمعالجة، والمعين للقرار."
+                    },
+                    {
+                        id: "alg_q2",
+                        type: "mcq",
+                        question: "According to the Algorithm for finding the average of 3 numbers (Example 1), what is the correct order?",
+                        code: "1. Start\n2. Sum=0\n3. Input num1, num2, num3\n4. Sum=num1+num2+num3\n5. Average=Sum/3\n6. Output Average\n7. End",
+                        options: ["Correct Order", "Incorrect: Input should be after Sum calculation", "Incorrect: Sum should be 1", "Incorrect: Output before Average"],
+                        answer: 0,
+                        hint: "(Lecture 1, Example 1) التسلسل المنطقي: ابدأ، صفر المجموع، اقرأ الأرقام، اجمع، اقسم، اطبع.",
+                        explanation: "هذا هو الترتيب الصحيح للخوارزمية كما ورد في المحاضرة الأولى."
+                    },
+                    {
+                        id: "alg_q3",
+                        type: "mcq",
+                        question: "In the algorithm for finding the average of 30 numbers (Example 3), how do we check if we finished all numbers?",
+                        code: "Set N = 30\n...\nN = N - 1\nIF N != 0 Then GO TO ...",
+                        options: ["Using N != 0 condition", "Using N > 30 condition", "Using Sum == 0 condition", "No condition needed"],
+                        answer: 0,
+                        hint: "(Lecture 1, Example 3) يتم إنقاص العداد N بواحد في كل مرة وفحص ما إذا وصل للصفر.",
+                        explanation: "يتم تعيين N=30، ثم إنقاصه (N=N-1) وفحصه (IF N != 0) للعودة وإدخال رقم جديد."
+                    }
+                ]
+            },
+            practical: {
+                title: "أسئلة العملي (Practical)",
+                description: "تطبيقات برمجية من محاضرات العملي (3.1 و 3.2).",
+                questions: [
+                    {
+                        id: "prac_q1",
+                        type: "debug",
+                        question: "Lecture 3.1: How to check if a number is Even/Odd using simple IF (without else)?",
+                        code: "int x; cin >> x;\nif (x % 2 == 0) cout << \"Even\";\n// What should be the next line?\ncout << \"Odd\";",
+                        options: ["else cout << \"Odd\";", "if (x % 2 != 0) cout << \"Odd\";", "while(x) cout << \"Odd\";", "switch(x) ..."],
+                        answer: 1,
+                        hint: "(عملي 3.1 - مثال 1) المطلوب استخدام جملة if ثانية بدلاً من else.",
+                        explanation: "حسب المحاضرة 3.1، الحل المطلوب هو استخدام جملة if ثانية بشرط معاكس: if (x % 2 != 0)."
+                    },
+                    {
+                        id: "prac_q2",
+                        type: "predict",
+                        question: "Lecture 3.1: Grade Adjustment. What happens if average (av) is 45?",
+                        code: "float av = 45;\nif (av >= 50) { av = av + 5; cout << av; }\nif (av < 50) { av = av + 10; cout << av; }",
+                        options: ["Prints 50", "Prints 55", "Prints 45", "Prints 60"],
+                        answer: 1,
+                        hint: "(عملي 3.1 - مثال 3) الطالب الراسب (أقل من 50) يضاف له 10 درجات.",
+                        explanation: "الشرط الأول (>=50) خطأ. الشرط الثاني (<50) صحيح، فتصبح الدرجة 45 + 10 = 55 وتطبع."
+                    },
+                    {
+                        id: "prac_q3",
+                        type: "mcq",
+                        question: "Lecture 3.2: Salary Increase Logic. Which code matches the requirement?",
+                        code: "Requirement:\n1-5 years: +100\n6-10 years: +200\n>10 years: +300",
+                        options: [
+                            "if(y>=1 && y<=5) ... else if(y>=6 && y<=10) ... else ...",
+                            "if(y>5) ... if(y>10) ...",
+                            "switch(y) { case 1-5 ... }",
+                            "if(y==5) ... else if(y==10) ..."
+                        ],
+                        answer: 0,
+                        hint: "(عملي 3.2 - مثال 3) استخدام if-else-if ladder لتغطية النطاقات.",
+                        explanation: "الحل الصحيح هو استخدام النطاقات (Ranges) مع && كما في الخيار الأول."
+                    },
+                    {
+                        id: "prac_q4",
+                        type: "code_logic",
+                        question: "Lecture 3.2: Finding Max of 3 numbers (x, y, z) using 'if-else-if ladder'.",
+                        code: "Select the correct logic structure:",
+                        options: [
+                            "if(x>y && x>z) max=x; else if(y>x && y>z) max=y; else max=z;",
+                            "if(x>y) max=x; if(y>z) max=y; else max=z;",
+                            "max = x; if(y>max) max=y; if(z>max) max=z;",
+                            "None of the above"
+                        ],
+                        answer: 0,
+                        hint: "(عملي 3.2 - مثال 2 الطريقة الثانية).",
+                        explanation: "الطريقة المحددة في المحاضرة (Ladder) تستخدم الشروط المركبة (&&) مع else if."
+                    }
+                ]
+            },
+            l1: {
+                title: "المحاضرة 1 و 2: الأساسيات",
+                description: "المتغيرات، الكلمات المحجوزة، أنواع البيانات، العمليات الحسابية.",
+                questions: [
+                    {
+                        id: "l1_q1",
+                        type: "tf",
+                        question: "\"5x\" is a correct variable name in C++.",
+                        code: null,
+                        options: ["True", "False"],
+                        answer: 1, 
+                        hint: "(Prog 1.pdf Q2-2) هل يمكن أن يبدأ اسم المتغير برقم؟",
+                        explanation: "خطأ (False). لا يمكن أن تبدأ أسماء المتغيرات برقم، يجب أن تبدأ بحرف أو شرطة سفلية (_)."
+                    },
+                    {
+                        id: "l1_q2",
+                        type: "tf",
+                        question: "Keywords in C++ are explicitly reserved words and cannot be used as variable names.",
+                        code: null,
+                        options: ["True", "False"],
+                        answer: 0,
+                        hint: "(Prog 1.pdf Q2-1) الكلمات المحجوزة لها معنى خاص للمترجم.",
+                        explanation: "صحيح (True). الكلمات المحجوزة مثل 'int', 'if', 'while' مخصصة للغة ولا يمكن استخدامها كأسماء متغيرات."
+                    },
+                    {
+                        id: "l1_q3",
+                        type: "mcq",
+                        question: "What is the result of the expression: 2 * 4 % 12?",
+                        code: null,
+                        options: ["0", "6", "8", "2"],
+                        answer: 2,
+                        hint: "(Prog 1.pdf Q2-4) الأسبقية للضرب والقسمة وباقي القسمة متساوية، التنفيذ من اليسار لليمين.",
+                        explanation: "أولاً: 2 * 4 = 8. ثانياً: 8 % 12 = 8 (لأن 8 أصغر من 12)."
+                    },
+                    {
+                        id: "l1_q4",
+                        type: "tf",
+                        question: "The 'while' statement is a selection statement.",
+                        code: null,
+                        options: ["True", "False"],
+                        answer: 1,
+                        hint: "(Prog 1.pdf Q2-3) هل while تستخدم للاختيار (selection) أم التكرار (repetition)؟",
+                        explanation: "خطأ (False). الـ while هي جملة تكرار (Loop/Repetition)، أما الـ if و switch فهي جمل اختيار."
+                    },
+                    {
+                        id: "l1_q5",
+                        type: "debug",
+                        question: "Identify the error in the following code snippet:",
+                        code: "int main() {\n  cout << \"Hello World\";\n  return 0\n}",
+                        options: [
+                            "Missing #include <iostream>",
+                            "Missing semicolon after return 0",
+                            "main should be void",
+                            "Both A and B"
+                        ],
+                        answer: 3,
+                        hint: "انتبه للمكتبات المضمنة ولنهاية الجمل البرمجية.",
+                        explanation: "الكود يفتقد تضمين مكتبة الإدخال/الإخراج '#include <iostream>' ويفتقد الفاصلة المنقوطة ';' بعد return 0."
+                    }
+                ]
+            },
+            l3: {
+                title: "المحاضرة 3: الجمل الشرطية",
+                description: "جمل if، if-else، الشروط المتداخلة، المعاملات المنطقية.",
+                questions: [
+                    {
+                        id: "l3_q1",
+                        type: "predict",
+                        question: "What is the output of the following program?",
+                        code: "int x = 4, y = 8;\nif(x % 2 == 0 && y % x == 0)\n    cout << \"yes\";\nelse\n    cout << \"No\";",
+                        options: ["yes", "No", "Error", "Nothing"],
+                        answer: 0,
+                        hint: "(Exam Photo 3 Q2-C) تحقق من الشرطين: هل 4 زوجي؟ وهل 8 تقبل القسمة على 4؟",
+                        explanation: "4 % 2 يساوي 0 (صحيح). و 8 % 4 يساوي 0 (صحيح). الشرط الكلي صحيح، لذا يطبع 'yes'."
+                    },
+                    {
+                        id: "l3_q2",
+                        type: "predict",
+                        question: "What is the output?",
+                        code: "int n = -2;\nif (n > 0)\n    cout << \"+\";\nelse\n    cout << \"-\";",
+                        options: ["+", "-", "Nothing", "Error"],
+                        answer: 1,
+                        hint: "(Prog 1.pdf Q1-4) هل قيمة n أكبر من صفر؟",
+                        explanation: "قيمة n هي -2، وهي ليست أكبر من 0. لذا يتم تنفيذ جملة else وطباعة '-'."
+                    },
+                    {
+                        id: "l3_q3",
+                        type: "debug",
+                        question: "The following code intends to add 5 to 'av' if it's >= 50, then print it. Find the logical error.",
+                        code: "float av;\ncin >> av;\nif (av >= 50)\n    av = av + 5;\n    cout << av;",
+                        options: [
+                            "Syntax error in cin",
+                            "Missing braces { } for if block",
+                            "av should be int",
+                            "Condition is wrong"
+                        ],
+                        answer: 1,
+                        hint: "(عملي محاضرة 3.1) بدون الأقواس، الـ if تتحكم بسطر واحد فقط.",
+                        explanation: "بدون الأقواس { }، السطر الأول فقط (av = av + 5) يتبع الشرط. السطر الثاني (cout) سيتنفذ دائماً بغض النظر عن الشرط، وهذا خطأ منطقي."
+                    },
+                    {
+                        id: "l3_q4",
+                        type: "mcq",
+                        question: "To check if a number 'n' is strictly between 10 and 20 (exclusive), use:",
+                        code: null,
+                        options: [
+                            "if (10 < n < 20)",
+                            "if (n > 10 || n < 20)",
+                            "if (n > 10 && n < 20)",
+                            "if (n >= 10 && n <= 20)"
+                        ],
+                        answer: 2,
+                        hint: "في البرمجة لا يمكن كتابة المتراجحات بشكل رياضي متصل.",
+                        explanation: "يجب ربط الشرطين بـ && (AND). الصيغة الرياضية '10 < n < 20' غير صحيحة منطقياً في ++C."
+                    }
+                ]
+            },
+            l4: {
+                title: "المحاضرة 4: حلقات التكرار",
+                description: "حلقات for، while، do-while، والحلقات المتداخلة.",
+                questions: [
+                    {
+                        id: "l4_q1",
+                        type: "predict",
+                        question: "What is the output?",
+                        code: "for(int n = 5; n <= 1; n--)\n    cout << n << \" \";",
+                        options: ["5 4 3 2 1", "1 2 3 4 5", "nothing", "Infinite Loop"],
+                        answer: 2,
+                        hint: "(Prog 1.pdf Q1-3) تحقق من شرط البداية. هل 5 أصغر من أو يساوي 1؟",
+                        explanation: "قيمة البداية n=5. الشرط n<=1 خاطئ منذ البداية. لذا لن تعمل الحلقة أبداً (nothing)."
+                    },
+                    {
+                        id: "l4_q2",
+                        type: "predict",
+                        question: "What is the output?",
+                        code: "int n;\nfor(n = 1; n <= 2; n++);\ncout << n;",
+                        options: ["1", "2", "3", "1 2"],
+                        answer: 2,
+                        hint: "(Prog 1.pdf Q1-4) لاحظ الفاصلة المنقوطة (semicolon) في نهاية سطر الـ for.",
+                        explanation: "الفاصلة المنقوطة ';' تنهي جسم الحلقة وهو فارغ. الحلقة تستمر حتى تصبح n=3 (عندها يفشل الشرط). ثم يطبع cout قيمة n وهي 3."
+                    },
+                    {
+                        id: "l4_q3",
+                        type: "predict",
+                        question: "What is the output?",
+                        code: "int n = 6;\nwhile(n >= 1) {\n    cout << n << \" \";\n    n = n / 3;\n}",
+                        options: ["6 3", "6 2", "2 6", "6 2 0"],
+                        answer: 1,
+                        hint: "(Prog 1.pdf Q1-2) تتبع قيم n: ابدأ بـ 6، اقسم على 3 (قسمة صحيحة).",
+                        explanation: "الدورة 1: اطبع 6، n تصبح 6/3 = 2. الدورة 2: اطبع 2، n تصبح 2/3 = 0. يتوقف الشرط."
+                    },
+                    {
+                        id: "l4_q4",
+                        type: "predict",
+                        question: "Determine the output of this nested loop:",
+                        code: "for(int i=1; i<=3; i++) {\n    for(int j=1; j<=i; j++)\n        cout << j;\n    cout << endl;\n}",
+                        options: [
+                            "1\n22\n333",
+                            "1\n12\n123",
+                            "123\n123\n123",
+                            "1\n2\n3"
+                        ],
+                        answer: 1,
+                        hint: "(Exam Photo 1) الدوارة الداخلية j تعتمد على قيمة i.",
+                        explanation: "الصف 1 (i=1): اطبع 1. الصف 2 (i=2): اطبع 1, 2. الصف 3 (i=3): اطبع 1, 2, 3."
+                    },
+                    {
+                        id: "l4_q5",
+                        type: "predict",
+                        question: "What is the output?",
+                        code: "int n;\nfor(n = 1; n <= 2; n++)\n    if(n%2==0) cout << \"*\";\n    else cout << \"$\";",
+                        options: ["$*", "*$", "$ *", "* $"],
+                        answer: 0,
+                        hint: "(Photo 3 Q2-D) عندما n=1 (فردي)، وعندما n=2 (زوجي).",
+                        explanation: "عندما n=1 (شرط الزوجي خطأ) يطبع $. عندما n=2 (شرط الزوجي صح) يطبع *. الناتج $*."
+                    },
+                    {
+                        id: "l4_q6",
+                        type: "predict",
+                        question: "What will be printed?",
+                        code: "int x;\nfor(x=1; x<=5; x=x+2)\n    cout << x << \" \";",
+                        options: ["1 2 3 4 5", "1 3 5", "2 4 6", "1 3"],
+                        answer: 1,
+                        hint: "مقدار الزيادة هو 2 في كل دورة.",
+                        explanation: "تبدأ بـ 1، تزداد بـ 2 لتصبح 3، تزداد بـ 2 لتصبح 5. الدورة التالية 7 تتوقف."
+                    },
+                    {
+                         id: "l4_q7",
+                         type: "mcq",
+                         question: "General form of an infinite loop using 'for':",
+                         code: null,
+                         options: ["for(1)", "for(;;)", "for(int i=0;;)", "while(i)"],
+                         answer: 1,
+                         hint: "(Final 2021 Q4) حلقة for بدون أي شروط.",
+                         explanation: "for(;;) is the standard syntax for an infinite loop in C++."
+                     }
+                ]
+            },
+            worksheet: {
+                title: "أوراق العمل والأسئلة المتقدمة",
+                description: "أسئلة هامة (تفكيك الأعداد، الفاكتوريل، المتسلسلات).",
+                questions: [
+                    {
+                        id: "ws_q1",
+                        type: "mcq",
+                        question: "To calculate the summation of digits for number 'num', which loop is correct?",
+                        code: null,
+                        options: [
+                            "while(num > 0) { digit=num%10; sum+=digit; num=num/10; }",
+                            "while(num > 0) { digit=num/10; sum+=digit; num=num%10; }",
+                            "for(i=0; i<num; i++) { sum+=i; }",
+                            "None of the above"
+                        ],
+                        answer: 0,
+                        hint: "(Prog 1.pdf Q3 Armstrong) استخرج الآحاد (باقي القسمة)، ثم احذفه (قسمة صحيحة).",
+                        explanation: "الخيار الأول صحيح. num%10 يعطي المرتبة الأخيرة، و num/10 يحذفها."
+                    },
+                    {
+                        id: "ws_q2",
+                        type: "mcq",
+                        question: "Which code snippet correctly calculates the Factorial of N (N!)?",
+                        code: "int f = 1; int N = 5;",
+                        options: [
+                            "for(int i=1; i<=N; i++) f = f * i;",
+                            "for(int i=1; i<=N; i++) f = f + i;",
+                            "for(int i=N; i>=1; i--) f = f / i;",
+                            "f = N * N;"
+                        ],
+                        answer: 0,
+                        hint: "(Final 2021 Q3) الفاكتوريل هو ضرب الأعداد من 1 إلى N.",
+                        explanation: "الفاكتوريل (Factorial) هو حاصل ضرب متسلسل: 1 * 2 * 3 ... * N."
+                    },
+                    {
+                        id: "ws_q3",
+                        type: "predict",
+                        question: "Series Calculation: What is the logic for z = x*2! + x*4! + ... ?",
+                        code: "int sum = 0, fact;\nfor(int i=2; i<=10; i+=2) {\n    fact = 1;\n    for(int j=1; j<=i; j++) fact *= j;\n    sum += x * fact;\n}",
+                        options: [
+                            "Calculates sum of factorials of even numbers multiplied by x",
+                            "Calculates sum of factorials of odd numbers",
+                            "Calculates sum of numbers without factorial",
+                            "Infinite Loop"
+                        ],
+                        answer: 0,
+                        hint: "(Final 2021 Q3) لاحظ العداد i يزداد بمقدار 2 (2, 4, 6...).",
+                        explanation: "الدوارة الخارجية تمر على الأرقام الزوجية (2, 4, 6...)، والدوارة الداخلية تحسب الفاكتوريل لها، ثم تضرب في x وتجمع."
+                    },
+                    {
+                        id: "ws_q4",
+                        type: "predict",
+                        question: "Output of this nested loop (Shape):",
+                        code: "for(int i=1; i<=3; i++) {\n    for(int j=1; j<=3; j++) {\n        if(i==j) cout << 1;\n        else cout << 0;\n    }\n    cout << endl;\n}",
+                        options: [
+                            "100\n010\n001",
+                            "111\n000\n111",
+                            "101\n010\n101",
+                            "000\n111\n000"
+                        ],
+                        answer: 0,
+                        hint: "(Similar to Prog 1.pdf Q5) يطبع 1 فقط عندما يتساوى رقم الصف مع رقم العمود (القطر الرئيسي).",
+                        explanation: "عندما i=1, j=1 (اطبع 1). عندما i=2, j=2 (اطبع 1). وهكذا. هذا يمثل القطر الرئيسي للمصفوفة."
+                    },
+                    {
+                        id: "ws_q5",
+                        type: "mcq",
+                        question: "Pass/Fail Logic: How to count pass students?",
+                        code: "int pass = 0; int mark;",
+                        options: [
+                            "if (mark >= 50) pass++;",
+                            "if (mark > 50) pass++;",
+                            "if (mark < 50) pass--;",
+                            "pass = mark + 50;"
+                        ],
+                        answer: 0,
+                        hint: "(Final 2021 Q1) الطالب الناجح هو من حصل على 50 فما فوق.",
+                        explanation: "الشرط الصحيح للنجاح هو أن تكون الدرجة أكبر من أو تساوي 50 (>=)."
+                    }
+                ]
+            },
+            archive: {
+                title: "أرشيف الامتحانات",
+                description: "أسئلة من الامتحانات الشهرية والنهائية للسنوات السابقة.",
+                questions: [
+                    {
+                        id: "arch_q1",
+                        type: "predict",
+                        question: "Final Exam 2018-2019 (Q1-1): What is the output?",
+                        code: "for(n=8; n>=1; n--)\n  if(n%2==0)\n    cout << n << \" \";",
+                        options: ["1 3 5 7", "2 4 6 8", "8 6 4 2", "Error"],
+                        answer: 2,
+                        hint: "الدوارة تبدأ من 8 وتتناقص. الشرط يطبع الأعداد الزوجية فقط.",
+                        explanation: "يبدأ بـ 8 (زوجي-يطبع)، ثم 7 (فردي-تجاوز)، ثم 6 (زوجي-يطبع)... وهكذا. الترتيب تنازلي: 8 6 4 2."
+                    },
+                    {
+                        id: "arch_q2",
+                        type: "predict",
+                        question: "Final Exam 2018-2019 (Q1-2): What is the output?",
+                        code: "n=6;\nwhile(n>=1) {\n  cout << n << \" \";\n  n = n / 3;\n}",
+                        options: ["6 3", "6 2", "2 6", "Infinite Loop"],
+                        answer: 1,
+                        hint: "انتبه لعملية القسمة وتحديث قيمة n داخل الحلقة.",
+                        explanation: "الدورة 1: n=6 (اطبع 6)، n تصبح 6/3=2. الدورة 2: n=2 (اطبع 2)، n تصبح 2/3=0. توقف."
+                    },
+                    {
+                        id: "arch_q3",
+                        type: "predict",
+                        question: "Mid Exam 2022 (Q3-A): What is the output?",
+                        code: "int k;\nfor(k=4; k<=1; k--)\n    cout << \"$\" << endl;\ncout << k << endl;",
+                        options: ["$\n4", "$\n3", "4", "Error"],
+                        answer: 2,
+                        hint: "تحقق من شرط البداية: هل 4 أصغر من أو يساوي 1؟",
+                        explanation: "الشرط k<=1 خاطئ منذ البداية (4 > 1). الحلقة لا تعمل. يطبع قيمة k وهي 4."
+                    },
+                    {
+                        id: "arch_q4",
+                        type: "predict",
+                        question: "Mid Exam 2022 (Q3-A): What is the output?",
+                        code: "int n;\nfor(n=5; n>=1; n--)\n    cout << n/2;",
+                        options: ["22110", "2.5 2 1.5 1 0.5", "2 1 0", "Error"],
+                        answer: 0,
+                        hint: "القسمة هنا هي قسمة أعداد صحيحة (Integer Division).",
+                        explanation: "5/2=2, 4/2=2, 3/2=1, 2/2=1, 1/2=0. الناتج المتلاصق: 22110."
+                    },
+                    {
+                        id: "arch_q5",
+                        type: "predict",
+                        question: "Mid Exam 2022 (Q3-C): What is the output?",
+                        code: "for(i=1; i<=3; i++)\n  for(j=3; j>i; j--)\n    cout << j << endl;",
+                        options: [
+                            "3\n2\n3",
+                            "123",
+                            "1\n2\n3",
+                            "3\n2\n1"
+                        ],
+                        answer: 0,
+                        hint: "تتبع الحلقة الداخلية: عندما i=1، j تبدأ من 3 وتتوقف عندما j>1.",
+                        explanation: "i=1: j=3,2 (يطبع 3, 2). i=2: j=3 (يطبع 3). i=3: الشرط 3>3 خطأ. الناتج النهائي: 3, 2, 3."
+                    },
+                    {
+                        id: "arch_q6",
+                        type: "predict",
+                        question: "Final Exam 2021 (Q6-A): What is the output?",
+                        code: "for(k=1; k<=7; k++) {\n  if(k%3==0 || k%5==0) break;\n  else for(j=1; j<=k; j++)\n    if(j%2==0) cout << j;\n}",
+                        options: ["2", "24", "246", "Nothing"],
+                        answer: 0,
+                        hint: "الدورة تتوقف تماماً (break) عند أول مضاعف لـ 3 أو 5.",
+                        explanation: "k=1: لا شيء. k=2: يطبع الزوجي من 1..2 وهو 2. k=3: الشرط k%3==0 صحيح -> break. الناتج 2 فقط."
+                    },
+                    {
+                        id: "arch_q7",
+                        type: "predict",
+                        question: "Final Exam 2021 (Q6-B): What is the output?",
+                        code: "int x;\nfor(x=20; x<=30; x=x+4)\n  if(x%2 != 0)\n    cout << x;\ncout << x;",
+                        options: [
+                            "32",
+                            "20\n24\n28\n32",
+                            "Error",
+                            "Nothing"
+                        ],
+                        answer: 0,
+                        hint: "انتبه للأقواس! جملة if لا تحتوي على أقواس، لذا cout << x الأخيرة خارج الـ if.",
+                        explanation: "قيم x: 20, 24, 28, 32. الشرط (فردي) لا يتحقق أبداً. عند انتهاء الحلقة تكون x=32 وتُطبع."
+                    }
+                ]
+            }
+        };
+
+        // --- وظائف مساعدة ---
+        // خوارزمية Fisher-Yates لخلط المصفوفات
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // --- منطق التطبيق ---
+        const app = {
+            currentView: 'dashboard',
+            // ترتيب الأقسام المنطقي للانتقال التلقائي
+            quizFlow: ['l1', 'l3', 'l4', 'practical', 'algo', 'worksheet', 'archive'],
+            
+            quizState: {
+                active: false,
+                lectureId: null,
+                questions: [],
+                currentIndex: 0,
+                score: 0,
+                answers: [] 
+            },
+            
+            init: function() {
+                this.loadView('dashboard');
+            },
+
+            loadView: function(viewId) {
+                this.currentView = viewId;
+                const container = document.getElementById('app-content');
+                
+                // Reset Quiz State on Nav Change
+                this.quizState.active = false;
+
+                // Nav Styling
+                document.querySelectorAll('.nav-btn, #nav-dashboard').forEach(el => {
+                    el.classList.remove('bg-blue-50', 'border-r-4', 'border-blue-500');
+                });
+                
+                const navId = (viewId === 'lecture_notes') ? 'nav-lecture_notes' :
+                              (viewId === 'algo') ? 'nav-algo' :
+                              (viewId === 'practical') ? 'nav-practical' :
+                              (viewId === 'dashboard') ? 'nav-dashboard' : `nav-${viewId}`;
+                
+                const navEl = document.getElementById(navId);
+                if(navEl) navEl.classList.add('bg-blue-50', 'border-r-4', 'border-blue-500');
+
+                // Route
+                if (viewId === 'dashboard') {
+                    this.renderDashboard(container);
+                } else if (viewId === 'lecture_notes') {
+                    this.renderLectureNotes(container);
+                } else {
+                    // It's a quiz view (l1, l3, l4, algo, practical, worksheet, archive)
+                    this.renderQuizIntro(container, viewId);
+                }
+            },
+
+            // --- QUIZ LOGIC ---
+
+            startQuiz: function(lectureId) {
+                const data = database[lectureId];
+                if (!data) return;
+
+                // 1. نسخ الأسئلة لتجنب التعديل على الأصل
+                let questions = JSON.parse(JSON.stringify(data.questions));
+
+                // 2. خلط ترتيب الأسئلة
+                questions = shuffleArray(questions);
+
+                // 3. خلط ترتيب الخيارات (Answers) لكل سؤال
+                questions.forEach(q => {
+                    // التحقق من وجود خيارات تعتمد على الترتيب مثل "All of the above" أو "Both A and B"
+                    // إذا وجدت هذه الكلمات، لا نخلط الخيارات لهذا السؤال
+                    const hasFixedOrderOption = q.options.some(opt => 
+                        opt.toLowerCase().includes("both") || 
+                        opt.toLowerCase().includes("above") ||
+                        opt.toLowerCase().includes("all of") ||
+                        opt.toLowerCase().includes("none of")
+                    );
+
+                    if (!hasFixedOrderOption) {
+                        // حفظ النص الصحيح للإجابة قبل الخلط
+                        const correctOptionText = q.options[q.answer];
+
+                        // خلط الخيارات
+                        q.options = shuffleArray(q.options);
+
+                        // تحديث مؤشر الإجابة الصحيحة بناءً على الموقع الجديد للنص
+                        q.answer = q.options.indexOf(correctOptionText);
+                    }
+                });
+
+                this.quizState = {
+                    active: true,
+                    lectureId: lectureId,
+                    questions: questions,
+                    currentIndex: 0,
+                    score: 0,
+                    answers: []
+                };
+
+                this.renderQuestionView();
+            },
+
+            renderQuizIntro: function(container, lectureId) {
+                const data = database[lectureId];
+                if (!data) return;
+
+                container.innerHTML = `
+                    <div class="fade-in max-w-2xl mx-auto mt-10 text-center">
+                        <div class="bg-white rounded-2xl p-10 shadow-lg border border-gray-100">
+                            <div class="mb-6 inline-flex items-center justify-center w-20 h-20 rounded-full bg-blue-100 text-blue-600 text-3xl">
+                                <i class="fas fa-clipboard-list"></i>
+                            </div>
+                            <h2 class="text-3xl font-bold text-gray-800 mb-4">${data.title}</h2>
+                            <p class="text-gray-600 mb-8 text-lg">${data.description}</p>
+                            <p class="text-sm text-gray-500 mb-8">عدد الأسئلة: ${data.questions.length}</p>
+                            
+                            <button onclick="app.startQuiz('${lectureId}')" class="bg-blue-600 text-white px-10 py-4 rounded-xl hover:bg-blue-700 transition font-bold text-lg shadow-md hover:shadow-lg transform hover:-translate-y-1">
+                                ابدأ الاختبار <i class="fas fa-play mr-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            },
+
+            renderQuestionView: function() {
+                const container = document.getElementById('app-content');
+                const q = this.quizState.questions[this.quizState.currentIndex];
+                const total = this.quizState.questions.length;
+                const current = this.quizState.currentIndex + 1;
+                const progress = (current / total) * 100;
+
+                // Determine Question Type Label/Color
+                const typeLabel = {
+                    'mcq': 'اختر الإجابة',
+                    'tf': 'صح / خطأ',
+                    'predict': 'توقع الناتج',
+                    'debug': 'اكتشف الخطأ',
+                    'code_logic': 'المنطق البرمجي'
+                }[q.type];
+
+                const typeColor = {
+                    'mcq': 'blue',
+                    'tf': 'indigo',
+                    'predict': 'amber',
+                    'debug': 'red',
+                    'code_logic': 'teal'
+                }[q.type];
+
+                container.innerHTML = `
+                    <div class="fade-in max-w-3xl mx-auto pb-10">
+                        <!-- Progress Header -->
+                        <div class="mb-6">
+                            <div class="flex justify-between items-end mb-2">
+                                <span class="text-sm font-bold text-gray-500">سؤال ${current} من ${total}</span>
+                                <span class="text-xs bg-${typeColor}-50 text-${typeColor}-700 px-2 py-1 rounded font-bold">${typeLabel}</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-blue-600 h-2.5 rounded-full transition-all duration-500" style="width: ${progress}%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Question Card -->
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 md:p-8">
+                            <h3 class="text-xl font-bold text-gray-800 mb-6 ltr-content text-left leading-relaxed" dir="ltr">${q.question}</h3>
+
+                            ${q.code ? `<div class="code-block text-sm mb-6" dir="ltr">${this.escapeHtml(q.code)}</div>` : ''}
+
+                            <div class="space-y-3" id="options-container">
+                                ${q.options.map((opt, idx) => `
+                                    <button onclick="app.handleAnswer(${idx})" 
+                                        class="w-full text-left p-4 rounded-xl border-2 border-gray-100 hover:border-blue-200 hover:bg-blue-50 transition flex items-start group option-btn ltr-content"
+                                        id="btn-opt-${idx}">
+                                        <div class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center mr-4 text-sm text-gray-500 font-bold group-hover:border-blue-500 group-hover:text-blue-500 flex-shrink-0 bg-white">
+                                            ${String.fromCharCode(65 + idx)}
+                                        </div>
+                                        <span class="text-gray-700 font-medium option-text text-lg" dir="ltr">${this.escapeHtml(opt)}</span>
+                                    </button>
+                                `).join('')}
+                            </div>
+
+                            <!-- Actions & Feedback -->
+                            <div class="mt-8 pt-6 border-t border-gray-100">
+                                <div class="flex justify-between items-center">
+                                    <button onclick="document.getElementById('hint-box').classList.toggle('hidden')" class="text-blue-500 hover:text-blue-700 text-sm font-bold flex items-center">
+                                        <i class="far fa-lightbulb ml-1"></i> تلميح
+                                    </button>
+                                    
+                                    <button id="next-btn" onclick="app.nextQuestion()" class="hidden bg-gray-800 text-white px-6 py-2 rounded-lg hover:bg-black transition font-bold">
+                                        السؤال التالي <i class="fas fa-arrow-left mr-2"></i>
+                                    </button>
+                                </div>
+
+                                <div id="hint-box" class="hidden mt-4 p-3 bg-yellow-50 text-yellow-800 text-sm rounded-lg border border-yellow-100">
+                                    💡 تلميح: ${q.hint}
+                                </div>
+
+                                <div id="feedback-box" class="hidden mt-6 p-4 rounded-xl text-sm border"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+
+            handleAnswer: function(selectedIdx) {
+                const q = this.quizState.questions[this.quizState.currentIndex];
+                const isCorrect = selectedIdx === q.answer;
+                const feedbackEl = document.getElementById('feedback-box');
+                const nextBtn = document.getElementById('next-btn');
+                
+                // Disable all options
+                document.querySelectorAll('.option-btn').forEach(btn => {
+                    btn.disabled = true;
+                    btn.classList.add('cursor-default', 'opacity-60');
+                    btn.classList.remove('hover:bg-blue-50', 'hover:border-blue-200');
+                });
+
+                // Highlight Selected
+                const selectedBtn = document.getElementById(`btn-opt-${selectedIdx}`);
+                selectedBtn.classList.remove('opacity-60', 'border-gray-100');
+                
+                if (isCorrect) {
+                    this.quizState.score++;
+                    selectedBtn.classList.add('bg-green-50', 'border-green-500', 'text-green-800');
+                    selectedBtn.querySelector('div').innerHTML = '<i class="fas fa-check"></i>';
+                    selectedBtn.querySelector('div').classList.add('bg-green-500', 'text-white', 'border-transparent');
+                    
+                    feedbackEl.className = "mt-6 p-4 rounded-xl text-sm border bg-green-50 border-green-200 text-green-800 correct-anim";
+                    feedbackEl.innerHTML = `<strong>🎉 إجابة صحيحة!</strong><br>${q.explanation}`;
+                } else {
+                    selectedBtn.classList.add('bg-red-50', 'border-red-500', 'text-red-800');
+                    selectedBtn.querySelector('div').innerHTML = '<i class="fas fa-times"></i>';
+                    selectedBtn.querySelector('div').classList.add('bg-red-500', 'text-white', 'border-transparent');
+
+                    // Show correct one
+                    const correctBtn = document.getElementById(`btn-opt-${q.answer}`);
+                    correctBtn.classList.remove('opacity-60', 'border-gray-100');
+                    correctBtn.classList.add('bg-green-50', 'border-green-500');
+
+                    feedbackEl.className = "mt-6 p-4 rounded-xl text-sm border bg-red-50 border-red-200 text-red-800 wrong-anim";
+                    feedbackEl.innerHTML = `<strong>❌ إجابة خاطئة.</strong><br>${q.explanation}`;
+                }
+
+                feedbackEl.classList.remove('hidden');
+                nextBtn.classList.remove('hidden'); // Show Next Button
+                
+                // Change text if last question
+                if (this.quizState.currentIndex === this.quizState.questions.length - 1) {
+                    nextBtn.innerHTML = 'إنهاء الاختبار <i class="fas fa-flag-checkered mr-2"></i>';
+                    nextBtn.onclick = () => app.finishQuiz();
+                }
+            },
+
+            nextQuestion: function() {
+                this.quizState.currentIndex++;
+                this.renderQuestionView();
+            },
+
+            finishQuiz: function() {
+                const container = document.getElementById('app-content');
+                const total = this.quizState.questions.length;
+                const score = this.quizState.score;
+                const percentage = Math.round((score / total) * 100);
+                
+                // تحديد القسم التالي
+                const currentFlowIndex = this.quizFlow.indexOf(this.quizState.lectureId);
+                const nextSectionId = (currentFlowIndex !== -1 && currentFlowIndex < this.quizFlow.length - 1) 
+                                      ? this.quizFlow[currentFlowIndex + 1] 
+                                      : null;
+
+                let message = "";
+                let color = "";
+                if (percentage >= 90) { message = "ممتاز! أداء رائع 🌟"; color = "text-green-600"; }
+                else if (percentage >= 70) { message = "جيد جداً! 👍"; color = "text-blue-600"; }
+                else if (percentage >= 50) { message = "جيد، استمر في المحاولة 💪"; color = "text-yellow-600"; }
+                else { message = "راجع المحاضرة وحاول مرة أخرى 🔥"; color = "text-red-600"; }
+
+                // تجهيز HTML للزر التلقائي أو زر النهاية
+                let nextActionHtml = '';
+                if (nextSectionId) {
+                    const nextTitle = database[nextSectionId].title;
+                    nextActionHtml = `
+                        <div class="mt-6 p-4 bg-blue-50 border border-blue-100 rounded-xl">
+                            <p class="text-blue-800 font-bold mb-2">جاري الانتقال للقسم التالي تلقائياً...</p>
+                            <div class="w-full bg-gray-200 rounded-full h-1.5 mb-3">
+                                <div class="bg-blue-600 h-1.5 rounded-full transition-all duration-[3000ms] w-0" id="auto-progress"></div>
+                            </div>
+                            <button onclick="app.cancelAutoNav('${this.quizState.lectureId}')" class="text-sm text-gray-500 underline hover:text-red-500">إلغاء الانتقال التلقائي</button>
+                        </div>
+                        <button onclick="app.loadView('${nextSectionId}')" class="bg-blue-600 text-white px-8 py-3 rounded-xl hover:bg-blue-700 transition font-bold shadow-md w-full mt-2">
+                            الانتقال فوراً إلى: ${nextTitle} <i class="fas fa-arrow-left mr-2"></i>
+                        </button>
+                    `;
+                    
+                    // تفعيل الانتقال التلقائي
+                    setTimeout(() => {
+                        const bar = document.getElementById('auto-progress');
+                        if(bar) bar.style.width = '100%';
+                    }, 100);
+
+                    this.autoNavTimer = setTimeout(() => {
+                        app.loadView(nextSectionId);
+                    }, 3500); // 3.5 ثواني انتظار
+
+                } else {
+                    nextActionHtml = `
+                        <div class="mt-6 p-4 bg-green-50 border border-green-100 rounded-xl text-green-800 font-bold">
+                            🎉 تهانينا! لقد أنهيت جميع الأقسام.
+                        </div>
+                        <button onclick="app.loadView('dashboard')" class="bg-gray-800 text-white px-8 py-3 rounded-xl hover:bg-gray-900 transition font-bold shadow-md w-full mt-2">
+                            عودة للرئيسية
+                        </button>
+                    `;
+                }
+
+                container.innerHTML = `
+                    <div class="fade-in max-w-2xl mx-auto mt-8 text-center">
+                        <div class="bg-white rounded-2xl p-10 shadow-lg border border-gray-100">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-2">نتيجة الاختبار</h2>
+                            <div class="text-6xl font-bold ${color} my-6 mb-2">${score} <span class="text-2xl text-gray-400">/ ${total}</span></div>
+                            <p class="text-gray-500 mb-6 text-lg">النسبة: ${percentage}%</p>
+                            <p class="text-xl font-bold text-gray-800 mb-6">${message}</p>
+                            
+                            ${nextActionHtml}
+                        </div>
+                    </div>
+                `;
+            },
+
+            cancelAutoNav: function(currentId) {
+                clearTimeout(this.autoNavTimer);
+                const container = document.getElementById('app-content');
+                // إعادة رسم الأزرار العادية عند الإلغاء
+                // سنقوم فقط بإخفاء عنصر الانتقال التلقائي وإظهار أزرار التحكم اليدوي
+                // لتسهيل الأمر، سنعيد تحميل نفس الواجهة لكن بدون المؤقت (أو ببساطة تنبيه المستخدم)
+                alert("تم إلغاء الانتقال التلقائي. يمكنك اختيار وجهتك يدوياً.");
+                app.loadView('dashboard'); // أو إبقاؤه في نفس الشاشة، لكن للتبسيط نعيده للوحة التحكم
+            },
+
+            // --- DASHBOARD & STATIC VIEWS ---
+
+            renderDashboard: function(container) {
+                let html = `
+                    <div class="fade-in max-w-4xl mx-auto">
+                        <div class="bg-white rounded-2xl p-8 shadow-sm mb-8 border border-gray-100">
+                            <h2 class="text-3xl font-bold text-gray-800 mb-2">منصة التعلم الإلكتروني</h2>
+                            <p class="text-gray-600">اختبر معلوماتك في البرمجة (C++) من المحاضرة 1 إلى 4.</p>
+                            <div class="mt-6 flex gap-4">
+                                <button onclick="app.loadView('l1')" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition font-bold">ابدأ الاختبار</button>
+                                <button onclick="app.loadView('lecture_notes')" class="bg-teal-500 text-white px-6 py-2 rounded-lg hover:bg-teal-600 transition font-bold">شرح المحاضرات</button>
+                            </div>
+                        </div>
+
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 px-1">المحتوى التعليمي</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                            ${this.getLectureCard('l1', 'المحاضرة 1 و 2', 'الأساسيات، المتغيرات، المعاملات', 'blue')}
+                            ${this.getLectureCard('l3', 'المحاضرة 3', 'الجمل الشرطية (If/Else)', 'purple')}
+                            ${this.getLectureCard('l4', 'المحاضرة 4', 'حلقات التكرار (Loops)', 'green')}
+                        </div>
+
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 px-1">المراجعة المتقدمة والعملي</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            ${this.getLectureCard('practical', 'أسئلة العملي (هام)', 'تطبيقات عملية من ملفات الـ PDF', 'indigo')}
+                            ${this.getLectureCard('algo', 'الخوارزميات (Algo)', 'أسئلة المحاضرة الأولى (Flowcharts)', 'teal')}
+                            ${this.getLectureCard('worksheet', 'أوراق العمل الهامة', 'تفكيك الأعداد، الفاكتوريل، المتسلسلات', 'amber')}
+                            ${this.getLectureCard('archive', 'أرشيف الامتحانات', 'أسئلة حقيقية من سنوات سابقة (صعبة)', 'red')}
+                        </div>
+                    </div>
+                `;
+                container.innerHTML = html;
+            },
+
+            renderLectureNotes: function(container) {
+                let html = `
+                    <div class="fade-in max-w-3xl mx-auto pb-10">
+                         <div class="mb-6">
+                            <h2 class="text-2xl font-bold text-gray-900">شرح المحاضرات (Lecture Notes)</h2>
+                            <p class="text-gray-500 text-sm mt-1">ملخصات مستخرجة من ملفات الـ PDF المرفقة (نظري وعملي).</p>
+                        </div>
+                        <div class="space-y-6">
+                `;
+
+                lectureContent.notes.forEach(note => {
+                    html += `
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                            <div class="flex justify-between items-center mb-4 border-b border-gray-100 pb-2">
+                                <h3 class="text-lg font-bold text-teal-700">${note.title}</h3>
+                                <span class="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded ltr-content">${note.source}</span>
+                            </div>
+                            <div class="note-content">
+                                ${note.content}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `</div></div>`;
+                container.innerHTML = html;
+            },
+
+            getLectureCard: function(id, title, desc, color) {
+                const data = database[id];
+                const total = data.questions.length;
+                return `
+                    <div onclick="app.loadView('${id}')" class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition group">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="p-3 bg-${color}-100 rounded-lg text-${color}-600 group-hover:bg-${color}-600 group-hover:text-white transition">
+                                <i class="fas fa-book text-xl"></i>
+                            </div>
+                            <span class="text-xs font-bold bg-gray-100 text-gray-600 px-2 py-1 rounded ltr-content">${total} Qs</span>
+                        </div>
+                        <h4 class="text-lg font-bold text-gray-800 mb-1">${title}</h4>
+                        <p class="text-sm text-gray-500 mb-4">${desc}</p>
+                    </div>
+                `;
+            },
+
+            escapeHtml: function(text) {
+                if (!text) return text;
+                return text
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+            }
+        };
+
+        app.init();
+
+    </script>
+</body>
+</html>
